@@ -33,10 +33,10 @@ const AdminPosts = () => {
   return (
     <Container maxW="container.lg" p={4}>
       <VStack spacing={8} align="stretch">
-        <Flex as="nav" bg="green.500" color="white" p={4} justifyContent="space-between" alignItems="center">
+        <Flex as="nav" bg="brand.700" color="white" p={4} justifyContent="space-between" alignItems="center">
           <Heading size="lg">Manage Posts</Heading>
         </Flex>
-        <Button colorScheme="green" onClick={() => navigate(-1)}>Back</Button>
+        <Button colorScheme="brand" onClick={() => navigate(-1)}>Back</Button>
 
         <Box as="main">
           <VStack spacing={4}>
@@ -48,7 +48,7 @@ const AdminPosts = () => {
                       value={editPostContent}
                       onChange={(e) => setEditPostContent(e.target.value)}
                     />
-                    <Button colorScheme="green" onClick={handleSave}>Save</Button>
+                    <Button colorScheme="brand" onClick={handleSave}>Save</Button>
                   </HStack>
                 ) : (
                   <Text>{post.title}</Text>
