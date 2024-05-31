@@ -28,9 +28,9 @@ const Index = () => {
   return (
     <Container maxW="container.lg" p={4}>
       <VStack spacing={8} align="stretch">
-        <Flex as="nav" bg="green.500" color="white" p={4} justifyContent="space-between" alignItems="center">
+        <Flex as="nav" bg="brand.700" color="white" p={4} justifyContent="space-between" alignItems="center">
           <Heading size="lg">Public Post Board</Heading>
-        <Button as={Link} to="/admin" colorScheme="green">Admin Panel</Button>
+        <Button as={Link} to="/admin" colorScheme="brand">Admin Panel</Button>
         </Flex>
 
         <Box as="main">
@@ -43,7 +43,7 @@ const Index = () => {
                   value={newPost}
                   onChange={(e) => setNewPost(e.target.value)}
                 />
-                <Button colorScheme="green" onClick={handlePostSubmit}>Post</Button>
+                <Button colorScheme="brand" onClick={handlePostSubmit}>Post</Button>
               </HStack>
             </Box>
 
@@ -55,7 +55,7 @@ const Index = () => {
                     <Text>{post.likes_count} {post.likes_count === 1 ? "Like" : "Likes"}</Text>
                     <IconButton
                       icon={<FaThumbsUp />}
-                      colorScheme="green"
+                      colorScheme="brand"
                       onClick={() => handleLike(post.id)}
                       aria-label="Like post"
                     />
