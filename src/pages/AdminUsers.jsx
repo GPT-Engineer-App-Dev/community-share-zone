@@ -1,59 +1,62 @@
 import { Container, VStack, Box, Text, Heading, Flex, Button, HStack, Input } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
+import { useReactions, useAddReaction, useUpdateReaction, useDeleteReaction } from '../integrations/supabase/index.js';
 
 const AdminUsers = () => {
   const navigate = useNavigate();
-  
-  const [users, setUsers] = useState([
-    { id: 1, name: "John Doe" },
-    { id: 2, name: "Jane Smith" },
-  ]);
-  const [editUserId, setEditUserId] = useState(null);
-  const [editUserName, setEditUserName] = useState("");
+  const { data: reactions, isLoading, error } = useReactions();
+  const addReactionMutation = useAddReaction();
+  const updateReactionMutation = useUpdateReaction();
+  const deleteReactionMutation = useDeleteReaction();
+  const [editReactionId, setEditReactionId] = useState(null);
+  const [editReactionEmoji, setEditReactionEmoji] = useState("");
 
-  const handleEdit = (user) => {
-    setEditUserId(user.id);
-    setEditUserName(user.name);
+  const handleEdit = (reaction) => {
+    setEditReactionId(reaction.id);
+    setEditReactionEmoji(reaction.emoji);
   };
 
   const handleSave = () => {
-    setUsers(users.map(user => user.id === editUserId ? { ...user, name: editUserName } : user));
-    setEditUserId(null);
-    setEditUserName("");
+    updateReactionMutation.mutate({ id: editReactionId, emoji: editReactionEmoji });
+    setEditReactionId(null);
+    setEditReactionEmoji("");
   };
 
-  const handleDelete = (userId) => {
-    setUsers(users.filter(user => user.id !== userId));
+  const handleDelete = (reactionId) => {
+    deleteReactionMutation.mutate(reactionId);
   };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading reactions</div>;
 
   return (
     <Container maxW="container.lg" p={4}>
       <VStack spacing={8} align="stretch">
         <Flex as="nav" bg="blue.500" color="white" p={4} justifyContent="space-between" alignItems="center">
-          <Heading size="lg">Manage Users</Heading>
+          <Heading size="lg">Manage Reactions</Heading>
         </Flex>
         
         <Button colorScheme="blue" onClick={() => navigate(-1)}>Back</Button>
 
         <Box as="main">
           <VStack spacing={4}>
-            {users.map((user) => (
-              <Box key={user.id} w="100%" p={4} borderWidth="1px" borderRadius="lg">
-                {editUserId === user.id ? (
+            {reactions.map((reaction) => (
+              <Box key={reaction.id} w="100%" p={4} borderWidth="1px" borderRadius="lg">
+                {editReactionId === reaction.id ? (
                   <HStack>
                     <Input
-                      value={editUserName}
-                      onChange={(e) => setEditUserName(e.target.value)}
+                      value={editReactionEmoji}
+                      onChange={(e) => setEditReactionEmoji(e.target.value)}
                     />
                     <Button colorScheme="blue" onClick={handleSave}>Save</Button>
                   </HStack>
                 ) : (
-                  <Text>{user.name}</Text>
+                  <Text>{reaction.emoji}</Text>
                 )}
                 <HStack mt={2}>
-                  <Button size="sm" colorScheme="yellow" onClick={() => handleEdit(user)}>Edit</Button>
-                  <Button size="sm" colorScheme="red" onClick={() => handleDelete(user.id)}>Delete</Button>
+                  <Button size="sm" colorScheme="yellow" onClick={() => handleEdit(reaction)}>Edit</Button>
+                  <Button size="sm" colorScheme="red" onClick={() => handleDelete(reaction.id)}>Delete</Button>
                 </HStack>
               </Box>
             ))}
