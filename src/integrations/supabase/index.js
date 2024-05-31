@@ -19,46 +19,92 @@ const fromSupabase = async (query) => {
 
 /* supabase integration types
 
-// EXAMPLE TYPES SECTION
 // DO NOT USE TYPESCRIPT
 
-Foo // table: foos
+Post // table: posts
     id: number
     title: string
+    body: string
+    created_at: string
+    author_id: string
+    likes_count: number
 
-Bar // table: bars
+Reaction // table: reactions
     id: number
-    foo_id: number // foreign key to Foo
-	
+    post_id: number // foreign key to Post
+    user_id: string
+    emoji: string
+
 */
 
-// Example hook for models
+// Hooks for Posts
+export const usePosts = () => useQuery({
+    queryKey: ['posts'],
+    queryFn: () => fromSupabase(supabase.from('posts').select('*')),
+});
 
-export const useFoo = ()=> useQuery({
-    queryKey: ['foo'],
-    queryFn: fromSupabase(supabase.from('foo')),
-})
-export const useAddFoo = () => {
+export const useAddPost = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (newFoo)=> fromSupabase(supabase.from('foo').insert([{ title: newFoo.title }])),
-        onSuccess: ()=> {
-            queryClient.invalidateQueries('foo');
+        mutationFn: (newPost) => fromSupabase(supabase.from('posts').insert([newPost])),
+        onSuccess: () => {
+            queryClient.invalidateQueries('posts');
         },
     });
 };
 
-export const useBar = ()=> useQuery({
-    queryKey: ['bar'],
-    queryFn: fromSupabase(supabase.from('bar')),
-})
-export const useAddBar = () => {
+export const useUpdatePost = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (newBar)=> fromSupabase(supabase.from('bar').insert([{ foo_id: newBar.foo_id }])),
-        onSuccess: ()=> {
-            queryClient.invalidateQueries('bar');
+        mutationFn: (updatedPost) => fromSupabase(supabase.from('posts').update(updatedPost).eq('id', updatedPost.id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('posts');
         },
     });
 };
 
+export const useDeletePost = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (postId) => fromSupabase(supabase.from('posts').delete().eq('id', postId)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('posts');
+        },
+    });
+};
+
+// Hooks for Reactions
+export const useReactions = () => useQuery({
+    queryKey: ['reactions'],
+    queryFn: () => fromSupabase(supabase.from('reactions').select('*')),
+});
+
+export const useAddReaction = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (newReaction) => fromSupabase(supabase.from('reactions').insert([newReaction])),
+        onSuccess: () => {
+            queryClient.invalidateQueries('reactions');
+        },
+    });
+};
+
+export const useUpdateReaction = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (updatedReaction) => fromSupabase(supabase.from('reactions').update(updatedReaction).eq('id', updatedReaction.id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('reactions');
+        },
+    });
+};
+
+export const useDeleteReaction = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (reactionId) => fromSupabase(supabase.from('reactions').delete().eq('id', reactionId)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('reactions');
+        },
+    });
+};

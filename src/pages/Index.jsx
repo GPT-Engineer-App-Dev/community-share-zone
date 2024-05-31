@@ -2,28 +2,39 @@ import { Container, VStack, Box, Text, Input, Button, HStack, Flex, Heading, Ico
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { FaThumbsUp } from "react-icons/fa";
+import { usePosts, useAddPost, useUpdatePost } from "../integrations/supabase";
 
 const Index = () => {
-  const [posts, setPosts] = useState([]);
+  const { data: posts, isLoading, isError } = usePosts();
+  const addPostMutation = useAddPost();
+  const updatePostMutation = useUpdatePost();
   const [newPost, setNewPost] = useState("");
 
   const handlePostSubmit = () => {
     if (newPost.trim() !== "") {
-      setPosts([{ content: newPost, id: Date.now(), likes: 0 }, ...posts]);
+      addPostMutation.mutate({ title: "New Post", body: newPost, likes_count: 0 });
       setNewPost("");
     }
   };
 
-  const handleLike = (postId) => {
-    setPosts(posts.map(post => post.id === postId ? { ...post, likes: post.likes + 1 } : post));
+  const handleLike = (postId, currentLikes) => {
+    updatePostMutation.mutate({ id: postId, likes_count: currentLikes + 1 });
   };
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (isError) {
+    return <Text>Error loading posts</Text>;
+  }
 
   return (
     <Container maxW="container.lg" p={4}>
       <VStack spacing={8} align="stretch">
         <Flex as="nav" bg="blue.500" color="white" p={4} justifyContent="space-between" alignItems="center">
           <Heading size="lg">Public Post Board</Heading>
-        <Button as={Link} to="/admin" colorScheme="blue">Admin Panel</Button>
+          <Button as={Link} to="/admin" colorScheme="blue">Admin Panel</Button>
         </Flex>
 
         <Box as="main">
@@ -43,13 +54,13 @@ const Index = () => {
             <VStack w="100%" spacing={4}>
               {posts.map((post) => (
                 <Box key={post.id} w="100%" p={4} borderWidth="1px" borderRadius="lg">
-                  <Text>{post.content}</Text>
+                  <Text>{post.body}</Text>
                   <HStack mt={2} justifyContent="space-between">
-                    <Text>{post.likes} {post.likes === 1 ? "Like" : "Likes"}</Text>
+                    <Text>{post.likes_count} {post.likes_count === 1 ? "Like" : "Likes"}</Text>
                     <IconButton
                       icon={<FaThumbsUp />}
                       colorScheme="blue"
-                      onClick={() => handleLike(post.id)}
+                      onClick={() => handleLike(post.id, post.likes_count)}
                       aria-label="Like post"
                     />
                   </HStack>

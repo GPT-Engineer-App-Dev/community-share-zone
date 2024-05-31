@@ -1,14 +1,14 @@
 import { Container, VStack, Box, Text, Heading, Flex, Button, HStack, Input } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom';
-import { useState } from "react";
+import { useUsers, useAddUser, useUpdateUser, useDeleteUser } from "../integrations/supabase";
 
 const AdminUsers = () => {
   const navigate = useNavigate();
   
-  const [users, setUsers] = useState([
-    { id: 1, name: "John Doe" },
-    { id: 2, name: "Jane Smith" },
-  ]);
+  const { data: users, isLoading, isError } = useUsers();
+  const addUserMutation = useAddUser();
+  const updateUserMutation = useUpdateUser();
+  const deleteUserMutation = useDeleteUser();
   const [editUserId, setEditUserId] = useState(null);
   const [editUserName, setEditUserName] = useState("");
 
@@ -18,14 +18,22 @@ const AdminUsers = () => {
   };
 
   const handleSave = () => {
-    setUsers(users.map(user => user.id === editUserId ? { ...user, name: editUserName } : user));
+    updateUserMutation.mutate({ id: editUserId, name: editUserName });
     setEditUserId(null);
     setEditUserName("");
   };
 
   const handleDelete = (userId) => {
-    setUsers(users.filter(user => user.id !== userId));
+    deleteUserMutation.mutate(userId);
   };
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (isError) {
+    return <Text>Error loading users</Text>;
+  }
 
   return (
     <Container maxW="container.lg" p={4}>

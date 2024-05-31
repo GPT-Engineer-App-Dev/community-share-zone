@@ -1,31 +1,39 @@
 import { Container, VStack, Box, Text, Heading, Flex, Button, HStack, Input } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom';
-import { useState } from "react";
+import { usePosts, useAddPost, useUpdatePost, useDeletePost } from "../integrations/supabase";
 
 const AdminPosts = () => {
   const navigate = useNavigate();
   
-  const [posts, setPosts] = useState([
-    { id: 1, content: "First post" },
-    { id: 2, content: "Second post" },
-  ]);
+  const { data: posts, isLoading, isError } = usePosts();
+  const addPostMutation = useAddPost();
+  const updatePostMutation = useUpdatePost();
+  const deletePostMutation = useDeletePost();
   const [editPostId, setEditPostId] = useState(null);
   const [editPostContent, setEditPostContent] = useState("");
 
   const handleEdit = (post) => {
     setEditPostId(post.id);
-    setEditPostContent(post.content);
+    setEditPostContent(post.body);
   };
 
   const handleSave = () => {
-    setPosts(posts.map(post => post.id === editPostId ? { ...post, content: editPostContent } : post));
+    updatePostMutation.mutate({ id: editPostId, body: editPostContent });
     setEditPostId(null);
     setEditPostContent("");
   };
 
   const handleDelete = (postId) => {
-    setPosts(posts.filter(post => post.id !== postId));
+    deletePostMutation.mutate(postId);
   };
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (isError) {
+    return <Text>Error loading posts</Text>;
+  }
 
   return (
     <Container maxW="container.lg" p={4}>
@@ -48,7 +56,7 @@ const AdminPosts = () => {
                     <Button colorScheme="blue" onClick={handleSave}>Save</Button>
                   </HStack>
                 ) : (
-                  <Text>{post.content}</Text>
+                  <Text>{post.body}</Text>
                 )}
                 <HStack mt={2}>
                   <Button size="sm" colorScheme="yellow" onClick={() => handleEdit(post)}>Edit</Button>
