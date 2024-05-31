@@ -1,4 +1,5 @@
 import { Container, VStack, Box, Text, Input, Button, HStack, Flex, Heading, IconButton } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { FaThumbsUp } from "react-icons/fa";
 
@@ -22,6 +23,7 @@ const Index = () => {
       <VStack spacing={8} align="stretch">
         <Flex as="nav" bg="blue.500" color="white" p={4} justifyContent="space-between" alignItems="center">
           <Heading size="lg">Public Post Board</Heading>
+        <Button as={Link} to="/admin" colorScheme="blue">Admin Panel</Button>
         </Flex>
 
         <Box as="main">
