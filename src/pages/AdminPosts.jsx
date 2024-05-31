@@ -1,7 +1,10 @@
 import { Container, VStack, Box, Text, Heading, Flex, Button, HStack, Input } from "@chakra-ui/react";
+import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
 
 const AdminPosts = () => {
+  const navigate = useNavigate();
+  
   const [posts, setPosts] = useState([
     { id: 1, content: "First post" },
     { id: 2, content: "Second post" },
@@ -30,6 +33,7 @@ const AdminPosts = () => {
         <Flex as="nav" bg="blue.500" color="white" p={4} justifyContent="space-between" alignItems="center">
           <Heading size="lg">Manage Posts</Heading>
         </Flex>
+        <Button colorScheme="blue" onClick={() => navigate(-1)}>Back</Button>
 
         <Box as="main">
           <VStack spacing={4}>

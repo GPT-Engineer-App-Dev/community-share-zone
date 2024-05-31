@@ -1,7 +1,10 @@
 import { Container, VStack, Box, Text, Heading, Flex, Button, HStack, Input } from "@chakra-ui/react";
+import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
 
 const AdminUsers = () => {
+  const navigate = useNavigate();
+  
   const [users, setUsers] = useState([
     { id: 1, name: "John Doe" },
     { id: 2, name: "Jane Smith" },
@@ -30,6 +33,8 @@ const AdminUsers = () => {
         <Flex as="nav" bg="blue.500" color="white" p={4} justifyContent="space-between" alignItems="center">
           <Heading size="lg">Manage Users</Heading>
         </Flex>
+        
+        <Button colorScheme="blue" onClick={() => navigate(-1)}>Back</Button>
 
         <Box as="main">
           <VStack spacing={4}>
