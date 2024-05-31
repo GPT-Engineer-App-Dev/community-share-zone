@@ -1,12 +1,15 @@
 import { Container, VStack, Box, Text, Heading, Flex, Button } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+
   return (
     <Container maxW="container.lg" p={4}>
       <VStack spacing={8} align="stretch">
         <Flex as="nav" bg="blue.500" color="white" p={4} justifyContent="space-between" alignItems="center">
           <Heading size="lg">Admin Dashboard</Heading>
+        <Button colorScheme="blue" onClick={() => navigate(-1)}>Back</Button>
         </Flex>
 
         <Box as="main">
