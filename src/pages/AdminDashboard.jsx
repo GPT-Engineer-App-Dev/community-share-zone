@@ -7,9 +7,9 @@ const AdminDashboard = () => {
   return (
     <Container maxW="container.lg" p={4}>
       <VStack spacing={8} align="stretch">
-        <Flex as="nav" bg="blue.500" color="white" p={4} justifyContent="space-between" alignItems="center">
+        <Flex as="nav" bg="green.500" color="white" p={4} justifyContent="space-between" alignItems="center">
           <Heading size="lg">Admin Dashboard</Heading>
-        <Button colorScheme="blue" onClick={() => navigate(-1)}>Back</Button>
+        <Button colorScheme="green" onClick={() => navigate(-1)}>Back</Button>
         </Flex>
 
         <Box as="main">
@@ -21,12 +21,12 @@ const AdminDashboard = () => {
 
             <Box w="100%" p={4} borderWidth="1px" borderRadius="lg">
               <Heading size="md" mb={4}>Manage Posts</Heading>
-              <Button as={Link} to="/admin/posts" colorScheme="blue">Go to Posts</Button>
+              <Button as={Link} to="/admin/posts" colorScheme="green">Go to Posts</Button>
             </Box>
 
             <Box w="100%" p={4} borderWidth="1px" borderRadius="lg">
               <Heading size="md" mb={4}>Manage Users</Heading>
-              <Button as={Link} to="/admin/users" colorScheme="blue">Go to Users</Button>
+              <Button as={Link} to="/admin/users" colorScheme="green">Go to Users</Button>
             </Box>
           </VStack>
         </Box>
